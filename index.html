@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Digital Library</title>
+    <meta name="description" content="Download 1000+ PDF books free. Real‑time stats, membership, live feed.">
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- PRELOADER -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo"><i class="fas fa-book-open"></i></div>
+            <div class="preloader-spinner"></div>
+            <div class="preloader-text">Loading Digital Library...</div>
+        </div>
+    </div>
+
+    <!-- PROGRESS BAR -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#home" class="logo">
+                    <i class="fas fa-book-open"></i>
+                    <span>Digital<span class="logo-highlight">Library</span></span>
+                    <span class="badge-pro">PRO</span>
+                </a>
+                
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#home" class="nav-link active">Home</a></li>
+                    <li class="nav-item"><a href="#library" class="nav-link">Library</a></li>
+                    <li class="nav-item"><a href="#top3" class="nav-link">Top Books</a></li>
+                    <li class="nav-item"><a href="#updates" class="nav-link">Updates</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link">Contact</a></li>
+                    <li class="nav-item">
+                        <button class="btn-upload" id="openUpload">
+                            <i class="fas fa-cloud-upload-alt"></i><span>Upload PDF</span>
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="nav-actions">
+                    <!-- Membership Welcome / Login Button -->
+                    <div class="member-area" id="memberArea">
+                        <button class="btn-member" id="openMemberModal">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="member-name">Login</span>
+                        </button>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="search-toggle" id="searchToggle"><i class="fas fa-search"></i></button>
+                    <div class="hamburger">
+                        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SEARCH OVERLAY -->
+    <div class="search-overlay" id="searchOverlay">
+        <div class="search-container">
+            <button class="search-close" id="searchClose"><i class="fas fa-times"></i></button>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="globalSearch" placeholder="Search 1000+ PDF books..." autocomplete="off">
+                <button class="btn btn-primary search-btn">Search</button>
+            </div>
+            <div class="search-suggestions">
+                <div class="suggestions-title">Popular PDFs</div>
+                <div class="suggestions-tags">
+                    <span class="suggestion-tag">Artificial Intelligence</span>
+                    <span class="suggestion-tag">Python</span>
+                    <span class="suggestion-tag">Web Development</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- HERO SECTION with LIVE STATS -->
+        <section id="home" class="hero">
+            <div class="hero-particles" id="particles"></div>
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge animate-fade-in">
+                        <span class="badge-pulse">📚 <span id="totalBooksStat">1,245</span> PDFs</span>
+                        <span class="badge-pulse">⬇️ <span id="totalDownloadsStat">15.2K</span> Downloads</span>
+                        <span class="badge-pulse">👥 <span id="activeReadersStat">8.7K</span> Readers</span>
+                        <span class="badge-pulse">📅 <span id="todayDownloadsStat">247</span> Today</span>
+                    </div>
+                    
+                    <h1 class="hero-title animate-slide-up">
+                        Download Professional <span class="gradient-text">PDF Books</span>
+                    </h1>
+                    <p class="hero-subtitle animate-slide-up">1000+ free PDFs • Instant download • Real‑time stats</p>
+                    <p class="hero-description animate-slide-up">
+                        <span class="highlight">Access 1245+ PDF books</span> with one‑click download. 
+                        Technology, Science, Programming & more. <span class="highlight">Join 8,700+ active readers</span> today.
+                    </p>
+                    
+                    <div class="hero-buttons animate-slide-up">
+                        <a href="#library" class="btn btn-primary btn-glow">
+                            <i class="fas fa-download"></i> Browse & Download
+                        </a>
+                        <a href="#top3" class="btn btn-outline">
+                            <i class="fas fa-trophy"></i> Top 3 Books
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-image animate-fade-in">
+                    <div class="pdf-preview-card">
+                        <div class="pdf-icon">
+                            <i class="fas fa-file-pdf"></i>
+                            <span class="pdf-badge">HOT</span>
+                        </div>
+                        <div class="pdf-info">
+                            <h4 id="heroBookTitle">Python Mastery</h4>
+                            <p>2.5 MB • 892 pages</p>
+                            <div class="pdf-actions">
+                                <span class="pdf-download-count">
+                                    <i class="fas fa-download"></i> <span id="heroBookDownloads">28.4K</span>
+                                </span>
+                                <button class="btn-pdf-preview" id="heroPreviewBtn">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="floating-pdfs"></div>
+                </div>
+            </div>
+            <div class="hero-wave">
+                <svg viewBox="0 0 1440 320"><path fill="#ffffff" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,170.7C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>
+            </div>
+        </section>
+
+        <!-- STATS DASHBOARD -->
+        <section id="stats" class="stats-section">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-file-pdf"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-counter" id="statTotalBooks">0</span>
+                            <span class="stat-title">PDFs Available</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-download"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-counter" id="statTotalDownloads">0</span>
+                            <span class="stat-title">Total Downloads</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-users"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-counter" id="statActiveReaders">0</span>
+                            <span class="stat-title">Active Readers</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                        <div class="stat-content">
+                            <span class="stat-counter" id="statTodayDownloads">0</span>
+                            <span class="stat-title">Downloaded Today</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LIBRARY SECTION -->
+        <section id="library" class="library">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">📖 PDF Library</div>
+                    <h2 class="section-title">Browse <span class="gradient-text">1,245+ PDFs</span></h2>
+                    <p class="section-subtitle">Filter by category · Preview · Download with one click</p>
+                </div>
+                
+                <div class="library-controls">
+                    <div class="filter-tabs">
+                        <button class="filter-btn active" data-filter="all">All PDFs</button>
+                        <button class="filter-btn" data-filter="Technology">Technology</button>
+                        <button class="filter-btn" data-filter="Programming">Programming</button>
+                        <button class="filter-btn" data-filter="Science">Science</button>
+                        <button class="filter-btn" data-filter="Business">Business</button>
+                        <button class="filter-btn" data-filter="Literature">Literature</button>
+                    </div>
+                    <div class="download-actions">
+                        <button class="btn btn-outline" id="batchDownloadBtn">
+                            <i class="fas fa-layer-group"></i> Batch (<span id="selectedCount">0</span>)
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="books-grid" id="booksGrid"></div>
+                
+                <div class="load-more-container">
+                    <button class="btn btn-outline" id="loadMoreBooks">
+                        <i class="fas fa-spinner"></i> Load More PDFs
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOP 3 BOOKS SECTION (by downloads/views) -->
+        <section id="top3" class="top3-section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">🏆 Top Rated</div>
+                    <h2 class="section-title">Most <span class="gradient-text">Popular PDFs</span></h2>
+                    <p class="section-subtitle">Based on downloads & views · Updated in real‑time</p>
+                </div>
+                <div class="top3-grid" id="top3Grid"></div>
+            </div>
+        </section>
+
+        <!-- LIVE DOWNLOAD FEED & COMMUNITY -->
+        <section id="updates" class="updates">
+            <div class="container">
+                <div class="updates-dashboard">
+                    <!-- Live Feed -->
+                    <div class="live-feed">
+                        <div class="feed-header">
+                            <div class="feed-title">
+                                <i class="fas fa-download"></i>
+                                <h3>Live Download Feed</h3>
+                            </div>
+                            <div class="live-indicator">
+                                <span class="pulse-dot"></span><span>Live</span>
+                            </div>
+                        </div>
+                        <div class="live-downloads" id="liveDownloads"></div>
+                    </div>
+                    
+                    <!-- Community Board -->
+                    <div class="community-board">
+                        <div class="board-header">
+                            <i class="fas fa-users"></i>
+                            <h3>PDF Requests</h3>
+                        </div>
+                        <div class="comment-form">
+                            <input type="text" id="updateTitle" placeholder="Book title or request...">
+                            <textarea id="updateText" placeholder="Author / category / details..." rows="2"></textarea>
+                            <button class="btn btn-primary" id="addUpdate">
+                                <i class="fas fa-paper-plane"></i> Post Request
+                            </button>
+                        </div>
+                        <div class="updates-list" id="updatesList"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION (Enhanced WhatsApp) -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-tag">📞 Get PDF via WhatsApp</div>
+                    <h2 class="section-title">Request <span class="gradient-text">Any Book</span></h2>
+                    <p class="section-subtitle">Choose query type · Instant response time</p>
+                </div>
+                
+                <div class="contact-wrapper">
+                    <div class="contact-info-card">
+                        <div class="info-header">
+                            <i class="fas fa-headset"></i>
+                            <h3>PDF Request Service</h3>
+                        </div>
+                        <div class="pdf-request-stats">
+                            <div class="request-stat">
+                                <span class="stat-value" id="pendingRequests">23</span>
+                                <span class="stat-label">Pending</span>
+                            </div>
+                            <div class="request-stat">
+                                <span class="stat-value" id="fulfilledRequests">187</span>
+                                <span class="stat-label">Fulfilled</span>
+                            </div>
+                            <div class="request-stat">
+                                <span class="stat-value" id="avgResponseTime">2.4</span>
+                                <span class="stat-label">Avg. hours</span>
+                            </div>
+                        </div>
+                        <div class="info-items">
+                            <div class="info-item">
+                                <i class="fas fa-file-pdf"></i>
+                                <div><h4>24h PDF Delivery</h4><p>Most books added within 24h</p></div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fab fa-whatsapp"></i>
+                                <div><h4>WhatsApp Direct</h4><p>Get link instantly</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-form-card">
+                        <div class="form-header">
+                            <h3>Request via WhatsApp</h3>
+                            <p>Select query type for faster response</p>
+                        </div>
+                        
+                        <form id="whatsappForm" class="professional-form">
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label>Full Name</label>
+                                    <input type="text" id="waName" placeholder="Your name" required>
+                                </div>
+                                <div class="form-group half">
+                                    <label>Email</label>
+                                    <input type="email" id="waEmail" placeholder="Email" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Query Type</label>
+                                <select id="waQueryType" required>
+                                    <option value="Book Request">📕 Book Request (5 min)</option>
+                                    <option value="Technical Support">🔧 Technical Support (30 min)</option>
+                                    <option value="Membership Query">👤 Membership Query (1 hour)</option>
+                                    <option value="Feedback">💡 Feedback (24 hours)</option>
+                                    <option value="Partnership">🤝 Partnership (48 hours)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Your Message / Book Title</label>
+                                <textarea id="waMessage" placeholder="Enter book title, author, or details..." rows="3" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-whatsapp btn-glow">
+                                <i class="fab fa-whatsapp"></i> Send & Get PDF
+                                <span class="btn-shine"></span>
+                            </button>
+                            
+                            <div class="form-footer">
+                                <i class="fas fa-bolt"></i>
+                                <span id="responseTimeText">Expected response: within 5 minutes</span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="#home" class="footer-logo">
+                        <i class="fas fa-book-open"></i>
+                        <span>DigitalLibrary<span class="pro">.pro</span></span>
+                    </a>
+                    <p class="footer-description">Download 1000+ free PDF books. Real‑time stats, membership & live feed.</p>
+                    <div class="pdf-counter">
+                        <i class="fas fa-file-pdf"></i>
+                        <span id="footerPdfCount">1,245 PDFs available</span>
+                    </div>
+                </div>
+                <div class="footer-links-grid">
+                    <div class="footer-links-col">
+                        <h4>PDF Categories</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Technology</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Programming</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Science</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Business</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-col">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> How to Download</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> PDF Preview</a></li>
+                            <li><a href="#"><i class="fas fa-chevron-right"></i> Membership</a></li>
+                            <li><a href="#contact"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="copyright">
+                    <p>&copy; <span id="currentYear"></span> DigitalLibrary Pro. All rights reserved. | v4.0</p>
+                </div>
+                <div class="footer-badges">
+                    <span class="badge"><i class="fas fa-file-pdf"></i> 1245+ PDFs</span>
+                    <span class="badge"><i class="fas fa-bolt"></i> Instant Download</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+    <!-- Book Detail Modal -->
+    <div class="modal-overlay" id="bookModal">
+        <div class="modal-content modal-lg">
+            <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Upload PDF Modal -->
+    <div class="modal-overlay" id="uploadModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeUploadModal"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h2>Upload / Request PDF</h2>
+                <p>Share a PDF or request a book</p>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" class="professional-form">
+                    <div class="form-group">
+                        <label>Book Title <span class="required">*</span></label>
+                        <input type="text" id="bookTitle" placeholder="e.g., Python Programming" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Author</label>
+                        <input type="text" id="bookAuthor" placeholder="Author name">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="bookCategory">
+                            <option value="Technology">Technology</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Science">Science</option>
+                            <option value="Business">Business</option>
+                            <option value="Literature">Literature</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>PDF URL (or leave blank to request)</label>
+                        <input type="url" id="pdfUrl" placeholder="https://example.com/book.pdf">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-cloud-upload-alt"></i> Submit PDF / Request
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEMBERSHIP MODAL (Register/Login) -->
+    <div class="modal-overlay" id="memberModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeMemberModal"><i class="fas fa-times"></i></button>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-user-plus"></i></div>
+                <h2>Member Login / Register</h2>
+                <p>Get a free membership number & unlock benefits</p>
+            </div>
+            <div class="modal-body">
+                <!-- Tabs -->
+                <div class="member-tabs">
+                    <button class="member-tab active" id="loginTab">Login</button>
+                    <button class="member-tab" id="registerTab">Register</button>
+                </div>
+                
+                <!-- Login Form -->
+                <div id="loginForm" class="member-form active">
+                    <form id="memberLoginForm">
+                        <div class="form-group">
+                            <label>Membership Number</label>
+                            <input type="text" id="loginMembership" placeholder="e.g., DLP-2025-12345" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="optional">(optional if not set)</span></label>
+                            <input type="password" id="loginPassword" placeholder="Enter password">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Register Form -->
+                <div id="registerForm" class="member-form">
+                    <form id="memberRegisterForm">
+                        <div class="form-group">
+                            <label>Full Name</label>
+                            <input type="text" id="regName" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email Address</label>
+                            <input type="email" id="regEmail" placeholder="your@email.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Password <span class="optional">(optional)</span></label>
+                            <input type="password" id="regPassword" placeholder="Leave blank for no password">
+                        </div>
+                        <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" id="regConfirmPassword" placeholder="Confirm if password set">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-user-check"></i> Register & Get Membership No.
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="successToast">
+        <div class="toast-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="toast-message" id="toastMessage">PDF Download Started</div>
+    </div>
+
+    <!-- BACK TO TOP -->
+    <button class="back-to-top" id="backToTop"><i class="fas fa-arrow-up"></i></button>
+
+    <!-- SCRIPTS -->
+    <script src="membership.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
