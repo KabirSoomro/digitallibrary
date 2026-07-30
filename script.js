@@ -348,9 +348,11 @@ class DigitalLibraryPro {
         const templateParams = {
             from_name: name,
             from_email: email,
+            reply_to: email,
             query_type: queryType + " (Member: " + memberInfo + ")",
             message: message,
-            to_email: 'gkabeersoomro@gmail.com'
+            to_email: 'gkabeersoomro@gmail.com',
+            website_name: 'Digital Library'
         };
 
         const submitBtn = document.querySelector('#emailForm button[type="submit"]');
