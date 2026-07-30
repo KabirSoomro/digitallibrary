@@ -321,13 +321,13 @@ class DigitalLibraryPro {
         return `${Math.floor(hours / 24)} days ago`;
     }
 
-    // ----- WHATSAPP ENHANCED -----
-    handleWhatsApp(e) {
+    // ----- EMAIL SUPPORT ENHANCED -----
+    handleEmail(e) {
         e.preventDefault();
-        const name = document.getElementById('waName').value;
-        const email = document.getElementById('waEmail').value;
-        const queryType = document.getElementById('waQueryType').value;
-        const message = document.getElementById('waMessage').value;
+        const name = document.getElementById('emailName').value;
+        const email = document.getElementById('emailEmail').value;
+        const queryType = document.getElementById('emailQueryType').value;
+        const message = document.getElementById('emailMessage').value;
         
         // Get response time based on query type
         let responseTime = '';
@@ -344,27 +344,40 @@ class DigitalLibraryPro {
         if (window.membership && window.membership.currentMember) {
             memberInfo = window.membership.currentMember.membershipNumber;
         }
+
+        const templateParams = {
+            from_name: name,
+            from_email: email,
+            query_type: queryType + " (Member: " + memberInfo + ")",
+            message: message,
+            to_email: 'gkabeersoomro@gmail.com'
+        };
+
+        const submitBtn = document.querySelector('#emailForm button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
         
-        const formattedMessage = `
-📚 DIGITAL LIBRARY PRO - ${queryType}
-
-👤 Name: ${name}
-📧 Email: ${email}
-🆔 Membership: ${memberInfo}
-
-📖 ${queryType} Details:
-${message}
-
----
-Request Time: ${new Date().toLocaleString()}
-⏱ Expected Response: within ${responseTime}
-        `.trim();
-        
-        const encoded = encodeURIComponent(formattedMessage);
-        const phone = "923168465697";
-        window.open(`https://wa.me/${phone}?text=${encoded}`, '_blank');
-        this.showToast(`WhatsApp opened – response within ${responseTime}`, 'success');
-        e.target.reset();
+        emailjs.send('service_omnoxbl', 'template_rr1ng4i', templateParams)
+            .then(() => {
+                Swal.fire({
+                    title: 'Request Sent!',
+                    text: `Thank you! Expected response: within ${responseTime}`,
+                    icon: 'success',
+                    confirmButtonColor: '#4f46e5',
+                    confirmButtonText: 'Great!'
+                });
+                e.target.reset(); // Reset form
+            }, (err) => {
+                Swal.fire({
+                    title: 'Oops!',
+                    text: 'Something went wrong while sending your request.',
+                    icon: 'error',
+                    confirmButtonColor: '#ef4444'
+                });
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalBtnText;
+            });
     }
 
     // ----- UTILITIES -----
@@ -458,8 +471,8 @@ setupEventListeners() {
         e.target.reset();
     });
 
-    // ---------- WHATSAPP FORM ----------
-    document.getElementById('whatsappForm')?.addEventListener('submit', (e) => this.handleWhatsApp(e));
+    // ---------- EMAIL FORM ----------
+    document.getElementById('emailForm')?.addEventListener('submit', (e) => this.handleEmail(e));
 
     // ---------- ADD UPDATE ----------
     document.getElementById('addUpdate')?.addEventListener('click', () => {
@@ -556,7 +569,7 @@ setupEventListeners() {
     }
 
     // ---------- QUERY TYPE RESPONSE TIME ----------
-    document.getElementById('waQueryType')?.addEventListener('change', (e) => {
+    document.getElementById('emailQueryType')?.addEventListener('change', (e) => {
         const val = e.target.value;
         let time = '';
         if (val === 'Book Request') time = '5 minutes';
