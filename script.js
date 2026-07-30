@@ -12,7 +12,7 @@ class DigitalLibraryPro {
         this.activeReaders = 8750; // base, increments on interactions
         this.totalDownloads = 0;
         this.todayDate = new Date().toDateString();
-        
+
         this.init();
     }
 
@@ -53,7 +53,7 @@ class DigitalLibraryPro {
             try {
                 this.uploadedBooks = JSON.parse(saved);
                 this.books = [...this.books, ...this.uploadedBooks];
-            } catch(e) {}
+            } catch (e) { }
         }
     }
 
@@ -106,7 +106,7 @@ class DigitalLibraryPro {
                         <span><i class="fas fa-file-alt"></i> ${book.pages} p</span>
                         <span><i class="fas fa-database"></i> ${book.size}</span>
                     </div>
-                    <p class="book-summary">${book.summary.substring(0,80)}...</p>
+                    <p class="book-summary">${book.summary.substring(0, 80)}...</p>
                     <div class="book-actions">
                         <button class="btn btn-outline btn-sm preview-btn" data-id="${book.id}"><i class="fas fa-eye"></i> Preview</button>
                         <button class="btn btn-primary btn-sm download-btn" data-id="${book.id}"><i class="fas fa-download"></i> PDF</button>
@@ -138,10 +138,10 @@ class DigitalLibraryPro {
 
     renderTop3() {
         if (!this.top3Grid) return;
-        const sorted = [...this.books].sort((a,b) => b.downloads - a.downloads).slice(0,3);
+        const sorted = [...this.books].sort((a, b) => b.downloads - a.downloads).slice(0, 3);
         this.top3Grid.innerHTML = sorted.map((book, idx) => `
             <div class="download-card">
-                <div class="download-rank">#${idx+1}</div>
+                <div class="download-rank">#${idx + 1}</div>
                 <div class="download-icon"><i class="${book.icon}"></i></div>
                 <div class="download-info">
                     <h4>${book.title}</h4>
@@ -164,12 +164,12 @@ class DigitalLibraryPro {
         const totalDownloads = this.books.reduce((sum, b) => sum + b.downloads, 0);
         // Active readers: base + random increment per session
         this.activeReaders = 8750 + Math.floor(Math.random() * 100);
-        
+
         this.animateCounter('statTotalBooks', totalBooks);
         this.animateCounter('statTotalDownloads', totalDownloads);
         this.animateCounter('statActiveReaders', this.activeReaders);
         this.animateCounter('statTodayDownloads', this.downloadsToday);
-        
+
         // Update hero badges
         document.getElementById('totalBooksStat').innerText = this.formatNumber(totalBooks);
         document.getElementById('totalDownloadsStat').innerText = this.formatNumber(totalDownloads);
@@ -181,7 +181,7 @@ class DigitalLibraryPro {
     animateCounter(elementId, target) {
         const el = document.getElementById(elementId);
         if (!el) return;
-        let current = parseInt(el.innerText.replace(/\D/g,'')) || 0;
+        let current = parseInt(el.innerText.replace(/\D/g, '')) || 0;
         const step = Math.ceil((target - current) / 20);
         if (step === 0) { el.innerText = this.formatNumber(target); return; }
         let count = current;
@@ -196,8 +196,8 @@ class DigitalLibraryPro {
     }
 
     formatNumber(num) {
-        if (num >= 1e6) return (num/1e6).toFixed(1) + 'M';
-        if (num >= 1e3) return (num/1e3).toFixed(1) + 'K';
+        if (num >= 1e6) return (num / 1e6).toFixed(1) + 'M';
+        if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
         return num.toString();
     }
 
@@ -205,23 +205,23 @@ class DigitalLibraryPro {
     async downloadPDF(bookId) {
         const book = this.findBookById(bookId);
         if (!book) return;
-        
+
         // Increment download count
         book.downloads += 1;
         this.totalDownloads += 1;
         this.downloadsToday += 1;
         localStorage.setItem('digitalLibrary_todayDownloads', this.downloadsToday);
-        
+
         // Save updated books to localStorage (if uploaded)
         this.saveBooks();
-        
+
         // Trigger download (dummy PDF)
         const link = document.createElement('a');
         link.href = book.pdfUrl || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf';
-        link.download = `${book.title.replace(/\s+/g,'_')}.pdf`;
+        link.download = `${book.title.replace(/\s+/g, '_')}.pdf`;
         link.target = '_blank';
         link.click();
-        
+
         // Update UI
         this.updateStats();
         this.renderTop3();
@@ -301,7 +301,7 @@ class DigitalLibraryPro {
             </div>
             <p class="update-text">${text}</p>
             <div class="update-footer">
-                <span>Request #${Math.floor(Math.random()*10000)}</span>
+                <span>Request #${Math.floor(Math.random() * 10000)}</span>
                 <span class="update-status">Pending</span>
             </div>
         `;
@@ -328,17 +328,17 @@ class DigitalLibraryPro {
         const email = document.getElementById('emailEmail').value;
         const queryType = document.getElementById('emailQueryType').value;
         const message = document.getElementById('emailMessage').value;
-        
+
         // Get response time based on query type
         let responseTime = '';
-        switch(queryType) {
+        switch (queryType) {
             case 'Book Request': responseTime = '5 minutes'; break;
             case 'Technical Support': responseTime = '30 minutes'; break;
             case 'Membership Query': responseTime = '1 hour'; break;
             case 'Feedback': responseTime = '24 hours'; break;
             case 'Partnership': responseTime = '48 hours'; break;
         }
-        
+
         // Get membership info if logged in
         let memberInfo = 'Guest';
         if (window.membership && window.membership.currentMember) {
@@ -358,7 +358,7 @@ class DigitalLibraryPro {
         const submitBtn = document.querySelector('#emailForm button[type="submit"]');
         const originalBtnText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        
+
         emailjs.send('service_omnoxbl', 'template_rr1ng4i', templateParams)
             .then(() => {
                 Swal.fire({
@@ -404,7 +404,7 @@ class DigitalLibraryPro {
 
     updateHeroBook() {
         // Show most downloaded book in hero preview
-        const top = this.books.sort((a,b) => b.downloads - a.downloads)[0];
+        const top = this.books.sort((a, b) => b.downloads - a.downloads)[0];
         if (top) {
             document.getElementById('heroBookTitle').innerText = top.title;
             document.getElementById('heroBookDownloads').innerText = this.formatNumber(top.downloads);
@@ -427,177 +427,177 @@ class DigitalLibraryPro {
     }
 
     // ----- EVENT LISTENERS -----
-setupEventListeners() {
-    // ---------- FILTER BUTTONS ----------
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            this.renderBooks(e.target.dataset.filter);
+    setupEventListeners() {
+        // ---------- FILTER BUTTONS ----------
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                this.renderBooks(e.target.dataset.filter);
+            });
         });
-    });
 
-    // ---------- BATCH DOWNLOAD ----------
-    document.getElementById('batchDownloadBtn')?.addEventListener('click', () => {
-        if (this.selectedBooks.size === 0) return this.showToast('Select at least one PDF', 'warning');
-        this.showToast(`Downloading ${this.selectedBooks.size} PDFs...`, 'info');
-        this.selectedBooks.forEach(id => this.downloadPDF(id));
-        this.selectedBooks.clear();
-        document.getElementById('selectedCount').innerText = '0';
-    });
-
-    // ---------- UPLOAD FORM ----------
-    document.getElementById('uploadForm')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newBook = {
-            id: Date.now(),
-            title: document.getElementById('bookTitle').value,
-            author: document.getElementById('bookAuthor').value || 'Unknown',
-            category: document.getElementById('bookCategory').value,
-            summary: 'User submitted PDF',
-            pages: Math.floor(Math.random() * 300) + 200,
-            size: `${(Math.random() * 10 + 2).toFixed(1)} MB`,
-            downloads: 0,
-            views: 0,
-            pdfUrl: document.getElementById('pdfUrl').value || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-            icon: 'fas fa-book',
-            uploaded: true
-        };
-        this.uploadedBooks.push(newBook);
-        this.books.push(newBook);
-        this.saveBooks();
-        this.renderBooks();
-        this.updateStats();
-        this.showToast('PDF uploaded/requested!', 'success');
-        document.getElementById('closeUploadModal').click();
-        e.target.reset();
-    });
-
-    // ---------- EMAIL FORM ----------
-    document.getElementById('emailForm')?.addEventListener('submit', (e) => this.handleEmail(e));
-
-    // ---------- ADD UPDATE ----------
-    document.getElementById('addUpdate')?.addEventListener('click', () => {
-        const title = document.getElementById('updateTitle').value;
-        const text = document.getElementById('updateText').value;
-        this.addUpdate(title, text);
-    });
-
-    // ---------- MODAL TRIGGERS ----------
-    document.getElementById('openUpload')?.addEventListener('click', () => {
-        document.getElementById('uploadModal').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    });
-
-    // ---------- CLOSE MODALS ----------
-    ['closeModal', 'closeUploadModal', 'closeMemberModal'].forEach(id => {
-        document.getElementById(id)?.addEventListener('click', function() {
-            this.closest('.modal-overlay').classList.remove('active');
-            document.body.style.overflow = 'auto';
+        // ---------- BATCH DOWNLOAD ----------
+        document.getElementById('batchDownloadBtn')?.addEventListener('click', () => {
+            if (this.selectedBooks.size === 0) return this.showToast('Select at least one PDF', 'warning');
+            this.showToast(`Downloading ${this.selectedBooks.size} PDFs...`, 'info');
+            this.selectedBooks.forEach(id => this.downloadPDF(id));
+            this.selectedBooks.clear();
+            document.getElementById('selectedCount').innerText = '0';
         });
-    });
 
-    // ---------- CLOSE MODAL ON OUTSIDE CLICK ----------
-    document.querySelectorAll('.modal-overlay').forEach(modal => {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) {
-                modal.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+        // ---------- UPLOAD FORM ----------
+        document.getElementById('uploadForm')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const newBook = {
+                id: Date.now(),
+                title: document.getElementById('bookTitle').value,
+                author: document.getElementById('bookAuthor').value || 'Unknown',
+                category: document.getElementById('bookCategory').value,
+                summary: 'User submitted PDF',
+                pages: Math.floor(Math.random() * 300) + 200,
+                size: `${(Math.random() * 10 + 2).toFixed(1)} MB`,
+                downloads: 0,
+                views: 0,
+                pdfUrl: document.getElementById('pdfUrl').value || 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                icon: 'fas fa-book',
+                uploaded: true
+            };
+            this.uploadedBooks.push(newBook);
+            this.books.push(newBook);
+            this.saveBooks();
+            this.renderBooks();
+            this.updateStats();
+            this.showToast('PDF uploaded/requested!', 'success');
+            document.getElementById('closeUploadModal').click();
+            e.target.reset();
         });
-    });
 
-    // ---------- DARK MODE TOGGLE ----------
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        // Load saved theme
-        const savedTheme = localStorage.getItem('digitalLibrary_theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-        }
+        // ---------- EMAIL FORM ----------
+        document.getElementById('emailForm')?.addEventListener('submit', (e) => this.handleEmail(e));
 
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            const icon = themeToggle.querySelector('i');
-            if (document.body.classList.contains('dark-theme')) {
-                icon.className = 'fas fa-sun';
-                localStorage.setItem('digitalLibrary_theme', 'dark');
-            } else {
-                icon.className = 'fas fa-moon';
-                localStorage.setItem('digitalLibrary_theme', 'light');
-            }
+        // ---------- ADD UPDATE ----------
+        document.getElementById('addUpdate')?.addEventListener('click', () => {
+            const title = document.getElementById('updateTitle').value;
+            const text = document.getElementById('updateText').value;
+            this.addUpdate(title, text);
         });
-    }
 
-    // ---------- SEARCH OVERLAY----------
-    const searchToggle = document.getElementById('searchToggle');
-    const searchOverlay = document.getElementById('searchOverlay');
-    const searchClose = document.getElementById('searchClose');
-    const globalSearch = document.getElementById('globalSearch');
-
-    if (searchToggle && searchOverlay) {
-        // Open search
-        searchToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            searchOverlay.classList.add('active');
-            setTimeout(() => globalSearch?.focus(), 100);
+        // ---------- MODAL TRIGGERS ----------
+        document.getElementById('openUpload')?.addEventListener('click', () => {
+            document.getElementById('uploadModal').classList.add('active');
             document.body.style.overflow = 'hidden';
         });
 
-        // Close with close button
-        if (searchClose) {
-            searchClose.addEventListener('click', () => {
-                searchOverlay.classList.remove('active');
+        // ---------- CLOSE MODALS ----------
+        ['closeModal', 'closeUploadModal', 'closeMemberModal'].forEach(id => {
+            document.getElementById(id)?.addEventListener('click', function () {
+                this.closest('.modal-overlay').classList.remove('active');
                 document.body.style.overflow = 'auto';
+            });
+        });
+
+        // ---------- CLOSE MODAL ON OUTSIDE CLICK ----------
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        });
+
+        // ---------- DARK MODE TOGGLE ----------
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            // Load saved theme
+            const savedTheme = localStorage.getItem('digitalLibrary_theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-theme');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-theme')) {
+                    icon.className = 'fas fa-sun';
+                    localStorage.setItem('digitalLibrary_theme', 'dark');
+                } else {
+                    icon.className = 'fas fa-moon';
+                    localStorage.setItem('digitalLibrary_theme', 'light');
+                }
             });
         }
 
-        // Close when clicking outside
-        searchOverlay.addEventListener('click', (e) => {
-            if (e.target === searchOverlay) {
-                searchOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
+        // ---------- SEARCH OVERLAY----------
+        const searchToggle = document.getElementById('searchToggle');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchClose = document.getElementById('searchClose');
+        const globalSearch = document.getElementById('globalSearch');
+
+        if (searchToggle && searchOverlay) {
+            // Open search
+            searchToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                searchOverlay.classList.add('active');
+                setTimeout(() => globalSearch?.focus(), 100);
+                document.body.style.overflow = 'hidden';
+            });
+
+            // Close with close button
+            if (searchClose) {
+                searchClose.addEventListener('click', () => {
+                    searchOverlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                });
             }
+
+            // Close when clicking outside
+            searchOverlay.addEventListener('click', (e) => {
+                if (e.target === searchOverlay) {
+                    searchOverlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+
+            // Close with ESC key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
+                    searchOverlay.classList.remove('active');
+                    document.body.style.overflow = 'auto';
+                }
+            });
+        }
+
+        // ---------- QUERY TYPE RESPONSE TIME ----------
+        document.getElementById('emailQueryType')?.addEventListener('change', (e) => {
+            const val = e.target.value;
+            let time = '';
+            if (val === 'Book Request') time = '5 minutes';
+            else if (val === 'Technical Support') time = '30 minutes';
+            else if (val === 'Membership Query') time = '1 hour';
+            else if (val === 'Feedback') time = '24 hours';
+            else if (val === 'Partnership') time = '48 hours';
+            document.getElementById('responseTimeText').innerText = `Expected response: within ${time}`;
         });
 
-        // Close with ESC key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && searchOverlay.classList.contains('active')) {
-                searchOverlay.classList.remove('active');
-                document.body.style.overflow = 'auto';
-            }
+        // ---------- BACK TO TOP ----------
+        window.addEventListener('scroll', () => {
+            const btt = document.getElementById('backToTop');
+            if (window.scrollY > 300) btt.classList.add('show');
+            else btt.classList.remove('show');
+        });
+        document.getElementById('backToTop')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // ---------- PROGRESS BAR ----------
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
         });
     }
-
-    // ---------- QUERY TYPE RESPONSE TIME ----------
-    document.getElementById('emailQueryType')?.addEventListener('change', (e) => {
-        const val = e.target.value;
-        let time = '';
-        if (val === 'Book Request') time = '5 minutes';
-        else if (val === 'Technical Support') time = '30 minutes';
-        else if (val === 'Membership Query') time = '1 hour';
-        else if (val === 'Feedback') time = '24 hours';
-        else if (val === 'Partnership') time = '48 hours';
-        document.getElementById('responseTimeText').innerText = `Expected response: within ${time}`;
-    });
-
-    // ---------- BACK TO TOP ----------
-    window.addEventListener('scroll', () => {
-        const btt = document.getElementById('backToTop');
-        if (window.scrollY > 300) btt.classList.add('show');
-        else btt.classList.remove('show');
-    });
-    document.getElementById('backToTop')?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // ---------- PROGRESS BAR ----------
-    window.addEventListener('scroll', () => {
-        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        const scrolled = (winScroll / height) * 100;
-        document.getElementById('progressBar').style.width = scrolled + '%';
-    });
-}
 }
 
 // Initialize
